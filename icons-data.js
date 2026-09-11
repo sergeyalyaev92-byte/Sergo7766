@@ -25,5 +25,40 @@ const RU_ICON_META = {
 };
 
 const friendlyName = name => RU_ICON_META[name]?.[0] || name.split('_').map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
-const normalizedCategories = ICON_CATEGORIES.map(([title,description,names], categoryIndex)=>({title,description,icons:names.split(' ').map(name=>({name,title:friendlyName(name),keywords:RU_ICON_META[name]?.[1]||name.replaceAll('_',' '),category:title,categoryIndex}))}));
-const ICONS = [...new Map(normalizedCategories.flatMap(c=>c.icons).map(i=>[i.name,i])).values()];
+const WORDS_RU={account:'Аккаунт',add:'Добавить',air:'Воздух',alarm:'Будильник',arrow:'Стрелка',article:'Документ',back:'Назад',badge:'Сотрудник',balance:'Баланс',bar:'Столбчатый',battery:'Батарея',book:'Книга',business:'Бизнес',calendar:'Календарь',call:'Звонок',camera:'Камера',car:'Автомобиль',chart:'График',check:'Готово',circle:'Круг',cloud:'Облако',code:'Код',computer:'Компьютер',content:'Содержимое',credit:'Кредитная',dashboard:'Панель',data:'Данные',delete:'Удалить',description:'Документ',device:'Устройство',directions:'Направление',document:'Документ',download:'Скачать',edit:'Редактировать',email:'Почта',error:'Ошибка',event:'Событие',favorite:'Избранное',file:'Файл',filter:'Фильтр',flight:'Самолёт',folder:'Папка',format:'Формат',forward:'Вперёд',group:'Группа',help:'Помощь',home:'Дом',image:'Изображение',info:'Информация',keyboard:'Клавиатура',language:'Язык',light:'Свет',link:'Ссылка',list:'Список',location:'Место',lock:'Замок',mail:'Почта',map:'Карта',menu:'Меню',money:'Деньги',more:'Ещё',notifications:'Уведомления',open:'Открыть',payments:'Платежи',person:'Человек',phone:'Телефон',photo:'Фото',play:'Воспроизвести',print:'Печать',refresh:'Обновить',remove:'Убрать',save:'Сохранить',search:'Поиск',security:'Безопасность',send:'Отправить',settings:'Настройки',share:'Поделиться',shopping:'Покупки',star:'Звезда',text:'Текст',time:'Время',travel:'Путешествия',upload:'Загрузить',verified:'Подтверждено',video:'Видео',visibility:'Видимость',volume:'Громкость',warning:'Внимание',wifi:'Wi-Fi',work:'Работа'};
+const SEARCH_GROUPS={
+ 'деньги финансы оплата платёж платежи':['payments','attach_money','paid','savings','account_balance','account_balance_wallet','wallet','credit_card','currency_ruble'],
+ 'сотрудник сотрудники человек люди пользователь':['person','badge','account_circle','groups','group','supervisor_account','diversity'],
+ 'команда коллектив группа':['groups','group','diversity','supervisor_account'],
+ 'документ документы файл договор':['description','article','draft','contract','file_copy','folder','note'],
+ 'график диаграмма статистика аналитика':['bar_chart','pie_chart','analytics','monitoring','show_chart','trending_up'],
+ 'строительство стройка здание':['construction','engineering','architecture','foundation','apartment'],
+ 'телефон звонок связь':['phone','call','smartphone','contact_phone']
+};
+function translatedTitle(name){
+ if(RU_ICON_META[name])return RU_ICON_META[name][0];
+ const words=name.split('_'), translated=words.map(w=>WORDS_RU[w]).filter(Boolean);
+ return translated.length?translated.join(' '):'Значок';
+}
+function extraKeywords(name){return Object.entries(SEARCH_GROUPS).filter(([,names])=>names.some(n=>name===n||name.startsWith(n+'_'))).map(([words])=>words).join(' ')}
+const normalizedCategories = ICON_CATEGORIES.map(([title,description,names], categoryIndex)=>({title,description,icons:names.split(' ').map(name=>({name,title:translatedTitle(name),keywords:`${RU_ICON_META[name]?.[1]||''} ${extraKeywords(name)} ${name.replaceAll('_',' ')}`,category:title,categoryIndex}))}));
+let ICONS = [...new Map(normalizedCategories.flatMap(c=>c.icons).map(i=>[i.name,i])).values()];
+
+/* The official catalog remains the source of truth and is merged with the curated RU catalog. */
+async function loadOfficialIcons(){
+ const response=await fetch('https://fonts.google.com/metadata/icons');
+ if(!response.ok)throw new Error(`Google catalog: ${response.status}`);
+ const raw=await response.text(), json=JSON.parse(raw.replace(/^\)\]\}'\s*/,''));
+ const official=Array.isArray(json.icons)?json.icons:[];
+ if(!official.length)throw new Error('Google catalog is empty');
+ const byName=new Map(ICONS.map(icon=>[icon.name,icon]));
+ official.forEach(item=>{
+  if(byName.has(item.name))return;
+  const rawCategory=(item.categories||[])[0]||'';
+  const categoryIndex=/social/i.test(rawCategory)?2:/communication/i.test(rawCategory)?4:/image/i.test(rawCategory)?5:/maps/i.test(rawCategory)?7:/av/i.test(rawCategory)?9:/transport/i.test(rawCategory)?10:/hardware/i.test(rawCategory)?13:/home/i.test(rawCategory)?16:/action/i.test(rawCategory)?3:11;
+  const category=normalizedCategories[categoryIndex];
+  const icon={name:item.name,title:translatedTitle(item.name),keywords:`${(item.tags||[]).join(' ')} ${extraKeywords(item.name)} ${item.name.replaceAll('_',' ')}`,category:category.title,categoryIndex};
+  category.icons.push(icon);byName.set(icon.name,icon);
+ });
+ ICONS=[...byName.values()];return ICONS;
+}

@@ -18,7 +18,7 @@
       <label class="search-box"><span class="material-icon" aria-hidden="true">search</span><input id="search" type="search" autocomplete="off" placeholder="Найти иконку: телефон, стрелка, деньги, важно…" aria-label="Поиск иконок"><kbd>⌘ K</kbd></label>
       <button class="settings-button" id="open-settings" type="button"><span aria-hidden="true">⚙</span> Настройки</button>
     </div>
-    <p class="facts">3900+ иконок <i>·</i> SVG и PNG <i>·</i> без фона <i>·</i> бесплатно <i>·</i> на русском</p>
+    <p class="facts"><span id="icon-count">Загружаем полный каталог…</span> <i>·</i> SVG и PNG <i>·</i> без фона <i>·</i> бесплатно <i>·</i> на русском</p>
   </header>
 
   <main>
@@ -61,14 +61,14 @@
       <fieldset class="control"><legend>Цвет иконки</legend><div class="color-control"><input type="color" id="icon-color" aria-label="Выбрать цвет иконки"><input type="text" id="icon-hex" maxlength="7" aria-label="HEX цвета иконки"></div></fieldset>
       <fieldset class="control"><legend>Подложка</legend><div class="backgrounds" id="backgrounds"><button type="button" data-background="none">Нет</button><button type="button" data-background="circle" aria-label="Круг"><i class="shape circle"></i></button><button type="button" data-background="square" aria-label="Квадрат"><i class="shape square"></i></button><button type="button" data-background="rounded" aria-label="Скруглённый квадрат"><i class="shape rounded"></i></button></div><div class="color-control" id="background-color-row"><input type="color" id="background-color" aria-label="Выбрать цвет подложки"><input type="text" id="background-hex" maxlength="7" aria-label="HEX цвета подложки"></div></fieldset>
       <div class="control"><div class="control-label"><label for="scale">Иконка внутри</label><output id="scale-value">60%</output></div><input id="scale" type="range" min="40" max="90" step="5"></div>
-      <div class="settings-preview"><span class="material-icon icon-surface">favorite</span><small>Предпросмотр</small></div>
+      <div class="settings-preview"><div id="settings-icon"></div><small>Предпросмотр</small></div>
     </div>
   </aside>
 
   <div class="modal-backdrop" id="modal-backdrop" hidden></div>
   <section class="modal" id="icon-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
     <button class="icon-button modal-close" id="close-modal" aria-label="Закрыть окно">×</button>
-    <div class="modal-layout"><div class="modal-preview"><span id="modal-symbol" class="material-icon icon-surface">search</span></div><div class="modal-info"><div class="title-line"><div><p class="eyebrow" id="modal-system">search</p><h2 id="modal-title">Поиск</h2></div><button class="link-button" id="copy-link" type="button" aria-label="Копировать ссылку"><span class="material-icon">link</span></button></div>
+    <div class="modal-layout"><div class="modal-preview"><div id="modal-symbol"></div></div><div class="modal-info"><div class="title-line"><div><p class="eyebrow" id="modal-system">search</p><h2 id="modal-title">Поиск</h2></div><button class="link-button" id="copy-link" type="button" aria-label="Копировать ссылку"><span class="material-icon">link</span></button></div>
       <p class="meta" id="modal-settings"></p>
       <div class="size-block"><label for="export-size">Размер, px</label><div class="stepper"><button id="size-minus" type="button" aria-label="Уменьшить размер">−</button><input id="export-size" type="number" min="16" max="2048" value="256"><button id="size-plus" type="button" aria-label="Увеличить размер">+</button></div><div class="quick-sizes" id="quick-sizes"><button>48</button><button>96</button><button class="active">256</button><button>512</button><button>1024</button></div></div>
       <div class="download-row"><button class="primary" id="download-svg">↓ SVG</button><button class="primary" id="download-png">↓ PNG</button></div>
