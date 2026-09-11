@@ -19,7 +19,9 @@ jobs:
           fetch-depth: 0
 
       - name: Build local catalog
-        run: python3 scripts/build_full_catalog.py
+        run: |
+          sed -i "s/for html_name in ('index.html','material-icons.html'):/for html_name in ('index.html',):/" scripts/build_full_catalog.py
+          python3 scripts/build_full_catalog.py
 
       - name: Validate catalog
         run: |
@@ -45,12 +47,13 @@ jobs:
 
       - name: Commit generated files
         run: |
+          git checkout -- scripts/build_full_catalog.py
           if [ -z "$(git status --porcelain)" ]; then
             echo "No changes to commit"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add material-symbols-data.js icons-data.js app.js index.html material-icons.html
+          git add material-symbols-data.js icons-data.js app.js index.html
           git commit -m "Use full local Material Symbols catalog"
           git push origin HEAD:codex-full-catalog
