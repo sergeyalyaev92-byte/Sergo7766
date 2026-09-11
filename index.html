@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Бесплатная библиотека иконок Material Symbols для презентаций — SVG и PNG.">
+  <title>Иконки и значки для презентаций</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero container">
+    <h1>Иконки и значки<br class="mobile-break"> для презентаций</h1>
+    <p class="lead">Настройте и скачайте иконки в едином стиле для слайдов, документов и интерфейсов.</p>
+    <div class="search-row">
+      <label class="search-box"><span class="material-icon" aria-hidden="true">search</span><input id="search" type="search" autocomplete="off" placeholder="Найти иконку: телефон, стрелка, деньги, важно…" aria-label="Поиск иконок"><kbd>⌘ K</kbd></label>
+      <button class="settings-button" id="open-settings" type="button"><span aria-hidden="true">⚙</span> Настройки</button>
+    </div>
+    <p class="facts">3900+ иконок <i>·</i> SVG и PNG <i>·</i> без фона <i>·</i> бесплатно <i>·</i> на русском</p>
+  </header>
+
+  <main>
+    <section class="container library" aria-label="Библиотека иконок">
+      <div id="categories"></div>
+      <section id="search-results" hidden><div class="section-heading"><div><h2 id="results-title">Результаты поиска</h2><p id="results-count"></p></div></div><div class="icon-grid" id="results-grid"></div><div class="empty" id="empty" hidden><span class="material-icon">search_off</span><h3>Ничего не нашлось</h3><p>Попробуйте другое слово или проверьте раскладку.</p></div></section>
+      <button id="show-all" class="show-all" type="button">Показать все иконки одним списком <span>→</span></button>
+    </section>
+
+    <section class="content container">
+      <h2>Как вставить иконку в PowerPoint, Keynote,<br> Google Slides и Figma</h2>
+      <p class="intro">Выберите значок, настройте внешний вид и используйте подходящий формат. Всё работает прямо в браузере.</p>
+      <div class="how-grid">
+        <article><b>PowerPoint</b><p>Скопируйте PNG и вставьте его на слайд обычной комбинацией клавиш.</p></article>
+        <article><b>Keynote</b><p>Используйте PNG для быстрого результата или перетащите скачанный SVG.</p></article>
+        <article><b>Google Презентации</b><p>Скачайте PNG с прозрачным фоном и загрузите его как изображение.</p></article>
+        <article><b>Figma</b><p>Скопируйте SVG — он вставится как редактируемый векторный объект.</p></article>
+      </div>
+      <div class="editorial">
+        <article><h2>Иконки в едином стиле</h2><p>Одинаковая толщина линий, заливка и цвет помогают собрать аккуратную презентацию. Глобальные настройки применяются ко всей библиотеке сразу.</p></article>
+        <article><h2>Значки и стикеры для презентации</h2><p>Добавьте цветную подложку: круг, квадрат или мягкий скруглённый квадрат. Так нейтральный знак превращается в заметный стикер.</p></article>
+        <article><h2>Иконки для инфографики и бизнес-презентаций</h2><p>Поиск на русском быстро находит людей, деньги, графики, процессы и другие частые темы деловых слайдов.</p></article>
+      </div>
+      <section class="formats"><h2>PNG без фона или SVG — что выбрать</h2><div class="table-wrap"><table><thead><tr><th></th><th>SVG</th><th>PNG</th></tr></thead><tbody><tr><td>Масштабирование</td><td>Без потери качества</td><td>До выбранного размера</td></tr><tr><td>Редактирование</td><td>Цвет и форма</td><td>Как изображение</td></tr><tr><td>Лучше всего</td><td>Figma и дизайн</td><td>Презентации и документы</td></tr></tbody></table></div></section>
+      <section class="faq"><h2>Частые вопросы</h2><details><summary>Можно ли использовать иконки бесплатно?</summary><p>Да. Material Symbols распространяются Google по лицензии Apache License 2.0, в том числе для коммерческих проектов.</p></details><details><summary>Почему копирование PNG может не работать?</summary><p>Браузеры разрешают запись изображений в буфер только в безопасном контексте. Запустите сайт через localhost и подтвердите доступ.</p></details><details><summary>Сохранятся ли мои настройки?</summary><p>Да, стиль, цвет, подложка и параметры шрифта сохраняются локально в вашем браузере.</p></details><details><summary>Как изменить размер иконки?</summary><p>Откройте иконку и выберите готовый размер или введите значение вручную.</p></details></section>
+    </section>
+  </main>
+
+  <footer class="container"><span>Material Symbols от Google</span><span>Apache License 2.0</span></footer>
+
+  <div class="overlay" id="settings-overlay" hidden></div>
+  <aside class="drawer" id="settings" aria-labelledby="settings-title" aria-hidden="true">
+    <div class="drawer-head"><h2 id="settings-title">Настроить</h2><button class="reset" id="reset" type="button">Сбросить всё</button><button class="icon-button" id="close-settings" aria-label="Закрыть настройки">×</button></div>
+    <div class="drawer-body">
+      <div class="control"><div class="control-label"><label for="fill">Заливка</label><output id="fill-value">0%</output></div><input id="fill" type="range" min="0" max="1" step="1"></div>
+      <fieldset class="control"><legend>Стиль</legend><div class="segments" id="styles"><button type="button" data-style="Outlined">Контурный</button><button type="button" data-style="Rounded">Скруглённый</button><button type="button" data-style="Sharp">Острый</button></div></fieldset>
+      <div class="control"><div class="control-label"><label for="weight">Толщина</label><output id="weight-value">400</output></div><input id="weight" type="range" min="100" max="700" step="100"></div>
+      <div class="control"><div class="control-label"><label for="grade">Градация</label><output id="grade-value">0</output></div><input id="grade" type="range" min="-50" max="200" step="25"></div>
+      <div class="control"><div class="control-label"><label for="optical">Оптический размер</label><output id="optical-value">24</output></div><input id="optical" type="range" min="20" max="48" step="1"></div>
+      <fieldset class="control"><legend>Цвет иконки</legend><div class="color-control"><input type="color" id="icon-color" aria-label="Выбрать цвет иконки"><input type="text" id="icon-hex" maxlength="7" aria-label="HEX цвета иконки"></div></fieldset>
+      <fieldset class="control"><legend>Подложка</legend><div class="backgrounds" id="backgrounds"><button type="button" data-background="none">Нет</button><button type="button" data-background="circle" aria-label="Круг"><i class="shape circle"></i></button><button type="button" data-background="square" aria-label="Квадрат"><i class="shape square"></i></button><button type="button" data-background="rounded" aria-label="Скруглённый квадрат"><i class="shape rounded"></i></button></div><div class="color-control" id="background-color-row"><input type="color" id="background-color" aria-label="Выбрать цвет подложки"><input type="text" id="background-hex" maxlength="7" aria-label="HEX цвета подложки"></div></fieldset>
+      <div class="control"><div class="control-label"><label for="scale">Иконка внутри</label><output id="scale-value">60%</output></div><input id="scale" type="range" min="40" max="90" step="5"></div>
+      <div class="settings-preview"><span class="material-icon icon-surface">favorite</span><small>Предпросмотр</small></div>
+    </div>
+  </aside>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden></div>
+  <section class="modal" id="icon-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <button class="icon-button modal-close" id="close-modal" aria-label="Закрыть окно">×</button>
+    <div class="modal-layout"><div class="modal-preview"><span id="modal-symbol" class="material-icon icon-surface">search</span></div><div class="modal-info"><div class="title-line"><div><p class="eyebrow" id="modal-system">search</p><h2 id="modal-title">Поиск</h2></div><button class="link-button" id="copy-link" type="button" aria-label="Копировать ссылку"><span class="material-icon">link</span></button></div>
+      <p class="meta" id="modal-settings"></p>
+      <div class="size-block"><label for="export-size">Размер, px</label><div class="stepper"><button id="size-minus" type="button" aria-label="Уменьшить размер">−</button><input id="export-size" type="number" min="16" max="2048" value="256"><button id="size-plus" type="button" aria-label="Увеличить размер">+</button></div><div class="quick-sizes" id="quick-sizes"><button>48</button><button>96</button><button class="active">256</button><button>512</button><button>1024</button></div></div>
+      <div class="download-row"><button class="primary" id="download-svg">↓ SVG</button><button class="primary" id="download-png">↓ PNG</button></div>
+      <button class="copy-wide" id="copy-png">Копировать PNG <small>для PowerPoint, Keynote, Google Slides</small></button><button class="copy-wide" id="copy-svg">Копировать SVG <small>для Figma</small></button>
+      <p class="category-meta">Категория: <b id="modal-category"></b></p><div class="related"><h3>Похожие</h3><div id="related-icons"></div></div>
+    </div></div>
+  </section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="icons-data.js"></script><script src="app.js"></script>
+</body></html>
