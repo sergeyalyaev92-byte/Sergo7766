@@ -67,9 +67,10 @@
   function search(query){
     const q=query.trim();$('#categories').hidden=!!q;$('#search-results').hidden=!q;$('#show-all').hidden=!!q;if(!q)return;
     const words=q.split(/\s+/).map(normalizeQuery);
-    const found=ICONS.filter(icon=>{const hay=normalizeQuery(`${icon.name} ${icon.title} ${icon.keywords} ${icon.category}`);return words.every(word=>hay.includes(word))}).slice(0,300);
-    $('#results-title').textContent=`Поиск: «${q}»`;$('#results-count').textContent=found.length?`Найдено: ${found.length}`:'';
-    $('#empty').hidden=!!found.length;$('#results-grid').hidden=!found.length;appendCards($('#results-grid'),found);
+    const matches=ICONS.filter(icon=>{const hay=normalizeQuery(`${icon.name} ${icon.title} ${icon.keywords} ${icon.category}`);return words.every(word=>hay.includes(word))});
+    const found=matches.slice(0,300);
+    $('#results-title').textContent=`Поиск: «${q}»`;$('#results-count').textContent=matches.length?`Найдено: ${matches.length}${matches.length>found.length?` · показаны первые ${found.length}`:''}`:'';
+    $('#empty').hidden=!!matches.length;$('#results-grid').hidden=!matches.length;appendCards($('#results-grid'),found);
   }
   let debounce;
   $('#search').addEventListener('input',event=>{clearTimeout(debounce);debounce=setTimeout(()=>search(event.target.value),120)});
