@@ -1,0 +1,42 @@
+name: Import official Material Symbols catalog
+
+on:
+  push:
+    paths:
+      - '.github/workflows/import-material-symbols.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download official Google Material Symbols codepoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          curl -fsSL 'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints' \
+            -o 'data/MaterialSymbolsOutlined.codepoints'
+          count=$(wc -l < 'data/MaterialSymbolsOutlined.codepoints')
+          echo "Official icon count: $count"
+          test "$count" -gt 4000
+
+      - name: Commit catalog into repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'data/MaterialSymbolsOutlined.codepoints'
+          if git diff --cached --quiet; then
+            echo 'Catalog is already up to date.'
+            exit 0
+          fi
+          git commit -m 'Add official Material Symbols codepoints'
+          git push
