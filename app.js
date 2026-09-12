@@ -101,7 +101,7 @@
   function openModal(name,historyMode='auto'){
     const icon=ICONS.find(item=>item.name===name);if(!icon)return;
     const alreadyOpen=$('#icon-modal').classList.contains('open');activeIcon=icon;
-    $('#modal-symbol').replaceChildren(createIconVisual(icon));$('#modal-system').textContent=name;$('#modal-title').textContent=icon.title;$('#modal-category').textContent=icon.category;
+    $('#modal-symbol').replaceChildren(createIconVisual(icon));$('#modal-system').hidden=true;$('#modal-system').textContent=name;$('#modal-title').textContent=icon.title;$('#modal-category').textContent=icon.category;
     updateModalMeta();renderRelated();$('#modal-backdrop').hidden=false;$('#icon-modal').classList.add('open');$('#icon-modal').setAttribute('aria-hidden','false');document.body.classList.add('locked');
     if(historyMode==='auto'){const url=new URL(location.href);url.searchParams.set('icon',name);if(alreadyOpen||modalHistoryOwned)history.replaceState({icon:name,iconModal:true},'',url);else{history.pushState({icon:name,iconModal:true},'',url);modalHistoryOwned=true}}
     if(!alreadyOpen)$('#close-modal').focus();
@@ -135,9 +135,10 @@
   }
   async function svgString(){
     const {geometry,viewBox}=await getOfficialGeometry(),size=exportSize(),scale=settings.scale/100,inset=size*(1-scale)/2;
-    const [, ,sourceWidth=24,sourceHeight=24]=viewBox.split(/\s+/).map(Number),sx=(size*scale)/sourceWidth,sy=(size*scale)/sourceHeight;
+    const [minX=0,minY=0,sourceWidth=24,sourceHeight=24]=viewBox.split(/\s+/).map(Number),sx=(size*scale)/sourceWidth,sy=(size*scale)/sourceHeight;
+    const tx=inset-minX*sx,ty=inset-minY*sy;
     let background='';if(settings.background==='circle')background=`<circle cx="${size/2}" cy="${size/2}" r="${size/2}" fill="${settings.backgroundColor}"/>`;else if(settings.background!=='none')background=`<rect width="${size}" height="${size}" rx="${settings.background==='rounded'?size*.2:0}" fill="${settings.backgroundColor}"/>`;
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${background}<g fill="${settings.iconColor}" transform="translate(${inset} ${inset}) scale(${sx} ${sy})">${geometry}</g></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${background}<g fill="${settings.iconColor}" transform="translate(${tx} ${ty}) scale(${sx} ${sy})">${geometry}</g></svg>`;
   }
   function download(blob,name){const anchor=document.createElement('a');anchor.href=URL.createObjectURL(blob);anchor.download=name;anchor.click();setTimeout(()=>URL.revokeObjectURL(anchor.href),1000)}
   async function withExport(action){try{await action()}catch(error){console.error(error);showToast('Экспорт этой иконки временно недоступен',3500)}}

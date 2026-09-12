@@ -63,19 +63,53 @@
     'стрелка вперед вперёд назад влево вправо вверх вниз':['arrow','chevron','forward','back','left','right','up','down']
   };
 
+  Object.assign(WORDS_RU,{
+    accessibility:'Доступность',accessible:'Доступность',acupuncture:'Акупунктура',acute:'Острое',adaptive:'Адаптивный',ad:'Реклама',admin:'Администратор',ads:'Реклама',agriculture:'Сельское хозяйство',airplane:'Самолёт',airport:'Аэропорт',album:'Альбом',align:'Выравнивание',allergy:'Аллергия',allergies:'Аллергия',altitude:'Высота',ambulance:'Скорая помощь',anchor:'Якорь',announcement:'Объявление',approval:'Подтверждение',area:'Область',art:'Искусство',assignment:'Задание',assistant:'Помощник',attractions:'Достопримечательности',attribution:'Авторство',bakery:'Пекарня',balcony:'Балкон',ballot:'Голосование',barcode:'Штрихкод',bathroom:'Ванная',bathtub:'Ванна',beach:'Пляж',bedtime:'Сон',bike:'Велосипед',biotech:'Биотехнологии',blood:'Кровь',body:'Тело',bolt:'Молния',bomb:'Опасность',brand:'Бренд',breakfast:'Завтрак',broken:'Повреждено',browser:'Браузер',bug:'Ошибка',bungalow:'Бунгало',bus:'Автобус',cached:'Обновить',cake:'Торт',calculate:'Калькулятор',campaign:'Кампания',camping:'Кемпинг',capture:'Съёмка',cardio:'Кардио',cases:'Кейсы',casino:'Казино',cast:'Трансляция',castle:'Замок',celebration:'Праздник',center:'Центр',charger:'Зарядка',charging:'Зарядка',chess:'Шахматы',church:'Церковь',clinical:'Медицинский',cloudy:'Облачно',collections:'Коллекции',compare:'Сравнить',compass:'Компас',conditions:'Условия',confirmation:'Подтверждение',connect:'Подключение',connected:'Подключено',contract:'Договор',control:'Управление',cookie:'Куки',cooking:'Готовка',corporate:'Корпоративный',cottage:'Дом',crown:'Корона',cycle:'Цикл',date:'Дата',deck:'Терраса',detector:'Датчик',dining:'Питание',disabled:'Отключено',diversity:'Разнообразие',draft:'Черновик',drafts:'Черновики',electric:'Электрический',energy:'Энергия',exposure:'Экспозиция',festival:'Фестиваль',fitness:'Фитнес',food:'Еда',garden:'Сад',gas:'Топливо',grocery:'Продукты',health:'Здоровье',hiking:'Поход',hospital:'Больница',hour:'Час',inbox:'Входящие',landscape:'Пейзаж',laundry:'Стирка',library:'Библиотека',local:'Местный',luggage:'Багаж',mall:'Торговый центр',meds:'Лекарства',museum:'Музей',near:'Рядом',park:'Парк',parking:'Парковка',passport:'Паспорт',pet:'Питомец',pets:'Питомцы',pool:'Бассейн',restaurant:'Ресторан',road:'Дорога',room:'Комната',sailing:'Парусный спорт',scanner:'Сканер',screenshot:'Снимок экрана',shower:'Душ',smoke:'Дым',taxi:'Такси',toys:'Игрушки',traffic:'Движение',vacuum:'Пылесос',voice:'Голос',yard:'Двор',
+    left:'Влево',right:'Вправо',up:'Вверх',down:'Вниз',top:'Сверху',bottom:'Снизу',next:'Следующий',previous:'Предыдущий',off:'Выключено',on:'Включено',filled:'Заполненный',outline:'Контур',new:'Новый',small:'Маленький',large:'Большой',high:'Высокий',low:'Низкий',medium:'Средний',full:'Полный',empty:'Пустой',first:'Первый',last:'Последний',horizontal:'Горизонтальный',vertical:'Вертикальный',forward:'Вперёд',backward:'Назад',start:'Начало',end:'Конец',open:'Открыть',closed:'Закрыто',question:'Вопрос',plus:'Плюс',minus:'Минус',selected:'Выбрано',select:'Выбрать',searching:'Поиск',download:'Скачать',upload:'Загрузить'
+  });
+
+  const CATEGORY_FALLBACK_RU={
+    'Популярные иконки для презентаций':'Иконка',
+    'Элементы интерфейса':'Элемент интерфейса',
+    'Люди и соцсети':'Люди',
+    'Действия':'Действие',
+    'Общение и связь':'Связь',
+    'Изображения и фото':'Изображение',
+    'Бизнес и финансы':'Бизнес',
+    'Карты и места':'Место',
+    'Текст и форматирование':'Текст',
+    'Аудио и видео':'Медиа',
+    'Транспорт':'Транспорт',
+    'Занятия и досуг':'Досуг',
+    'Android и система':'Системная иконка',
+    'Техника и гаджеты':'Устройство',
+    'Безопасность':'Безопасность',
+    'Путешествия':'Путешествие',
+    'Дом и быт':'Дом',
+    'Умный дом':'Умный дом',
+    'Другие иконки':'Другая иконка'
+  };
+
   const ACR = {wifi:'Wi-Fi',usb:'USB',qr:'QR',hd:'HD',hdr:'HDR',vpn:'VPN',sms:'SMS',nfc:'NFC',gps:'GPS',api:'API',apk:'APK',ios:'iOS',android:'Android',ai:'AI',ar:'AR',vr:'VR',tv:'TV',id:'ID','2d':'2D','3d':'3D','4k':'4K','5g':'5G','360':'360°'};
   const human = token => ACR[token.toLowerCase()] || (/^\d+(k|mp|fps)$/i.test(token) ? token.toUpperCase() : token.charAt(0).toUpperCase()+token.slice(1));
   const englishTitle = name => name.split('_').filter(Boolean).map(human).join(' ');
-  const betterTitle = name => {
+  const betterTitle = (name,category='Другие иконки') => {
     if(RU_ICON_META[name]) return RU_ICON_META[name][0];
     const tokens=name.split('_').filter(Boolean);
-    const parts=tokens.map(token=>WORDS_RU[token.toLowerCase()]||ACR[token.toLowerCase()]||null);
-    return parts.length && parts.every(Boolean) ? parts.join(' ') : englishTitle(name);
+    const parts=[];
+    for(const token of tokens){
+      const low=token.toLowerCase();
+      const value=WORDS_RU[low]||ACR[low]||(/^\d+(k|mp|fps)?$/i.test(token)?token.toUpperCase():null);
+      if(value && !parts.includes(value)) parts.push(value);
+    }
+    if(parts.some(part=>/[А-Яа-яЁё]/.test(part))) return parts.join(' ');
+    if(parts.length) return parts.join(' ');
+    return CATEGORY_FALLBACK_RU[category]||'Другая иконка';
   };
   const betterExtraKeywords = name => Object.entries(SEARCH_GROUPS).filter(([,parts])=>parts.some(part=>name===part||name.startsWith(part+'_')||name.includes(part))).map(([words])=>words).join(' ');
   const tokenKeywords = name => name.split('_').map(token=>WORDS_RU[token.toLowerCase()]||ACR[token.toLowerCase()]||'').filter(Boolean).join(' ');
   const patchIcon = icon => {
-    icon.title=betterTitle(icon.name);
+    icon.title=betterTitle(icon.name,icon.category);
     icon.keywords=`${RU_ICON_META[icon.name]?.[1]||''} ${betterExtraKeywords(icon.name)} ${tokenKeywords(icon.name)} ${icon.name.replaceAll('_',' ')} ${icon.title}`.replace(/\s+/g,' ').trim();
     return icon;
   };
