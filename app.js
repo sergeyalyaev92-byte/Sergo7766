@@ -2,8 +2,8 @@
   'use strict';
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-  const DEFAULTS = Object.freeze({style:'Outlined',fill:0,weight:400,grade:0,optical:24,iconColor:'#171717',background:'none',backgroundColor:'#E8E8E8',scale:60});
-  const STORAGE_KEY = 'material-icon-settings';
+  const DEFAULTS = Object.freeze({style:'Outlined',fill:0,weight:400,grade:0,optical:24,iconColor:'#FFFFFF',background:'rounded',backgroundColor:'#AE955F',scale:60});
+  const STORAGE_KEY = 'material-icon-settings-v2';
   const SVG_CACHE = new Map();
   let settings = loadSettings(), activeIcon = null, toastTimer, modalHistoryOwned = false;
   let autoColor = false, previousIconColor = settings.iconColor;
