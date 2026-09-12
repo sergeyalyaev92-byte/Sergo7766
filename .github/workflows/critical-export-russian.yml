@@ -1,0 +1,62 @@
+name: Critical export and Russian title fix
+
+on:
+  push:
+    branches:
+      - critical-export-russian-titles
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: critical-export-russian-titles
+          fetch-depth: 0
+
+      - name: Apply patch
+        run: python .github/patch_critical.py
+
+      - name: Validate icon catalog and visible titles
+        run: |
+          node <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const ctx={console,setTimeout,clearTimeout};vm.createContext(ctx);
+          for(const file of ['material-symbols-data.js','icons-data.js','ru-enhancements.js']){
+            vm.runInContext(fs.readFileSync(file,'utf8'),ctx,{filename:file});
+          }
+          (async()=>{
+            const diag=await vm.runInContext(`(async()=>{await loadOfficialIcons();
+              const allowed=/Wi-Fi|USB|QR|HD|HDR|VPN|SMS|NFC|GPS|API|APK|iOS|Android|AI|AR|VR|TV|ID|Bluetooth|CSS|CSV|PDF|SVG|PNG|JPG|\\d+FPS|\\d+D|\\d+K|\\d+G/g;
+              const suspicious=ICONS.filter(i=>/[A-Za-z]{3,}/.test(i.title.replace(allowed,''))).map(i=>({name:i.name,title:i.title}));
+              return {count:ICONS.length,unique:new Set(ICONS.map(i=>i.name)).size,blank:ICONS.filter(i=>!i.title.trim()).length,znachok:ICONS.filter(i=>i.title==='Значок').length,suspicious:suspicious.slice(0,20),suspiciousCount:suspicious.length};})()`,ctx);
+            console.log(JSON.stringify(diag,null,2));
+            if(diag.count<4000||diag.unique<4000||diag.blank||diag.znachok||diag.suspiciousCount) process.exit(1);
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+
+      - name: Validate export transform regression
+        run: |
+          grep -F "const [minX=0,minY=0,sourceWidth=24,sourceHeight=24]" app.js
+          grep -F 'translate(${tx} ${ty}) scale(${sx} ${sy})' app.js
+          python - <<'PY'
+          size=256; scale=.60; inset=size*(1-scale)/2
+          minx,miny,w,h=0,-960,960,960
+          sx=size*scale/w; sy=size*scale/h
+          tx=inset-minx*sx; ty=inset-miny*sy
+          assert round(tx,1)==51.2 and round(ty,1)==204.8
+          print('OK Google 0 -960 960 960 ->',tx,ty,sx,sy)
+          PY
+
+      - name: Commit clean result
+        run: |
+          rm -f .github/patch_critical.py .github/workflows/critical-export-russian.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix SVG PNG export and Russian icon titles"
+          git push origin HEAD:critical-export-russian-titles
